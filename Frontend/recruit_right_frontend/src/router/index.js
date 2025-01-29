@@ -5,7 +5,7 @@ import HiringManagerPage from "../views/HiringManagerPage.vue";
 import SourcingTeamPage from "../views/SourcingTeamPage.vue";
 import InterviewerPage from "../views/InterviewerPage.vue";
 import CandidatePage from "../views/CandidatePage.vue";
-import Register from '@/views/Register.vue';
+import UserRegister from '@/views/UserRegister.vue';
 
 const routes = [
   { path: "/", name: "Login", component: LoginPage },
@@ -14,7 +14,7 @@ const routes = [
   { path: "/sourcing_team", name: "SourcingTeam", component: SourcingTeamPage },
   { path: "/interviewer", name: "Interviewer", component: InterviewerPage },
   { path: "/candidate", name: "Candidate", component: CandidatePage },
-  {path: '/register',name: 'Register',component: Register},
+  {path: '/userregister',name: 'UserRegister',component: UserRegister},
 ];
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

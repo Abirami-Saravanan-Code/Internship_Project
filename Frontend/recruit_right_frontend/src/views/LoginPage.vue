@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="illustration-container">
-      <img src="/WelcomePageimage.jpg" alt="Illustration" class="illustration" />
+      <img src="/assets/WelcomePageimage.jpg" alt="Illustration" class="illustration" />
     </div>
     <div class="login-container">
       <h1>Welcome to Recruit Right!</h1>
