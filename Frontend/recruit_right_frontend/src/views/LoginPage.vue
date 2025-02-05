@@ -1,11 +1,11 @@
 <template>
   <div class="page-container">
     <div class="illustration-container">
-      <img src="/assets/WelcomePageimage.jpg" alt="Illustration" class="illustration" />
+      <img src="@/assets/WelcomePageimage.jpg" alt="Illustration" class="illustration" />
     </div>
     <div class="login-container">
       <h1>Welcome to Recruit Right!</h1>
-      <p class="welcome-text">Please sign in to your account and start the adventure.</p>
+      <p class="welcome-text">Please sign in to your account.</p>
 
       <form @submit.prevent="login" class="login-form">
         <div class="form-group">
@@ -62,11 +62,12 @@ export default {
   },
   methods: {
     async login() {
-  if (this.email && this.password) {
+  if (this.email && this.password && this.selectedRole) {
     try {
       const response = await axios.post('http://localhost:8000/api/login/', {
         email: this.email,
         password: this.password,
+        selectedRole: this.selectedRole
       });
 
       // If login is successful, check the user's role
@@ -74,15 +75,15 @@ export default {
 
       // Role-based redirection logic
       if (userRole === 'admin') {
-        this.$router.push({ name: 'Admin' });
+        this.$router.push({ name: 'admin' });
       } else if (userRole === 'hiring-manager') {
-        this.$router.push({ name: 'HiringManager' });
+        this.$router.push({ name: 'hiring-manager' });
       } else if (userRole === 'sourcing-team') {
-        this.$router.push({ name: 'SourcingTeam' });
+        this.$router.push({ name: 'sourcing-team' });
       } else if (userRole === 'interviewer') {
-        this.$router.push({ name: 'Interviewer' });
+        this.$router.push({ name: 'interviewer' });
       } else if (userRole === 'candidate') {
-        this.$router.push({ name: 'Candidate' });
+        this.$router.push({ name: 'candidate' });
       } else {
         alert('Invalid role selected');
       }
@@ -110,12 +111,12 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f0f4ff;
+    background-color: #d0e7f9;
     padding: 20px;
   }
   
   .illustration {
-    max-width: 80%;
+    max-width: 100%;
     height: auto;
   }
   

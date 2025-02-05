@@ -21,7 +21,7 @@
 from django.urls import path, include
 from django.contrib import admin
 from django.http import HttpResponse
-from .views import get_user_roles, assign_user_role, api_login_view  # Import the new login view
+from .views import get_user_roles, assign_user_role, api_login_view, get_redirect_url_for_role # Import the new login view
 
 # Define your views
 def test_view(request):
@@ -33,11 +33,10 @@ def home_view(request):
 # Define the URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view, name='home'),  # Root URL
-    path('test/', test_view, name='test'),  # Test URL
-
+    #5-2-2025 ch5 removed home and test view
     # API URLs
     path('api/get-user-roles/', get_user_roles, name='get_user_roles'),
     path('api/assign-user-role/', assign_user_role, name='assign_user_role'),
-    path('api/login/', api_login_view, name='api_login'),  # New login API route
+    # path('api/login/', api_login_view, name='api_login'),  # 5-2-2025 ch3
+    path('api/api-login-view/',api_login_view, name ='api_login_view')
 ]

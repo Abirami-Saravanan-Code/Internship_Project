@@ -32,13 +32,15 @@ def api_login_view(request):
     selected_role = data.get('selectedRole')
     
     try:
-        # Find the user by email (assuming email is used as username)
+        # Find the user by email (since email is username)
         user = User.objects.get(email=email)
     except User.DoesNotExist:
         return JsonResponse({'error': 'Invalid email or password'}, status=400)
     
     # Authenticate using email and password
-    user = authenticate(request, username=user.username, password=password)
+    #user = authenticate(request, username=user.username, password=password) #5-2-25 ch2
+
+    user = authenticate(request, username = email, password = password)
     
     if user is not None:
         login(request, user)  # Log the user in
@@ -55,16 +57,28 @@ def api_login_view(request):
     else:
         return JsonResponse({'error': 'Invalid email or password'}, status=400)
 
+# def get_redirect_url_for_role(role):
+#     # Returns the redirect URL based on the user's role
+#     if role == 'admin':
+#         return '/admin/dashboard/'
+#     elif role == 'hiring-manager':
+#         return '/hiring-manager/dashboard/'
+#     elif role == 'sourcing-team':
+#         return '/sourcing-team/dashboard/'
+#     elif role == 'interviewer':
+#         return '/interviewer/dashboard/'
+#     elif role == 'candidate':
+#         return '/candidate/dashboard/'
+#     return '/'
+
 def get_redirect_url_for_role(role):
     """Returns the redirect URL based on the user's role"""
-    if role == 'admin':
-        return '/admin/dashboard/'
-    elif role == 'hiring-manager':
-        return '/hiring-manager/dashboard/'
-    elif role == 'sourcing-team':
-        return '/sourcing-team/dashboard/'
-    elif role == 'interviewer':
-        return '/interviewer/dashboard/'
-    elif role == 'candidate':
-        return '/candidate/dashboard/'
-    return '/'
+    role = role.lower().replace(" ", "-")  # standardize the options and redirect
+    role_redirects = {
+        'admin': '/admin/dashboard/',
+        'hiring-manager': '/hiring-manager/dashboard/',
+        'sourcing-team': '/sourcing-team/dashboard/',
+        'interviewer': '/interviewer/dashboard/',
+        'candidate': '/candidate/dashboard/'
+    }
+    return role_redirects.get(role, '/')  # Default fallback

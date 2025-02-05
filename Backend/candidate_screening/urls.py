@@ -15,14 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
-from django.urls import path
-from .views import get_user_roles, assign_user_role, api_login_view
+from django.contrib import admin 
+#from django.urls import path  # 5-2-25 ch1
+# from .views import get_user_roles, assign_user_role, api_login_view  # check a
 
+# urlpatterns = [
+#     path('admin/', admin.site.urls),  # Admin URL
+#     path('api/get-user-roles/', get_user_roles, name='get_user_roles'),
+#     path('api/assign-user-role/', assign_user_role, name='assign_user_role'),
+#     path('api/login/', api_login_view, name='api_login_view'),
+#     # Other API paths...
+# ]
+
+from django.urls import path, include
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Admin URL
-    path('api/get-user-roles/', get_user_roles, name='get_user_roles'),
-    path('api/assign-user-role/', assign_user_role, name='assign_user_role'),
-    path('api/login/', api_login_view, name='api_login_view'),
-    # Other API paths...
+    path('admin/', admin.site.urls),
+    path('api/', include('recruit_right.urls')),  # Includes recruit_right URLs
 ]
+
