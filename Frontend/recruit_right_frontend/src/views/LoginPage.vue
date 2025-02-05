@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="illustration-container">
-      <img src="require('@/assets/WelcomePageimage.jpg')" alt="Illustration" class="illustration" />
+      <img src="@/assets/WelcomePageimage.jpg" alt="Illustration" class="illustration" />
     </div>
     <div class="login-container">
       <h1>Welcome to Recruit Right!</h1>
@@ -67,7 +67,7 @@ export default {
           const response = await axios.post('http://localhost:8000/api/login/', {
             email: this.email,
             password: this.password,
-            role: this.selectedRole,  // Send the exact role value to backend
+            selected_role: this.selectedRole,  // Send the exact role value to backend
           });
 
           if (response.data.token) {
@@ -119,13 +119,13 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f0f4ff;
+    background-color: #d0e7f9;
     padding: 20px;
   }
   
   .illustration {
-    max-width: 80%;
-    height: auto;
+    max-width: 100%;
+    height: 90%;
   }
   
   .login-container {

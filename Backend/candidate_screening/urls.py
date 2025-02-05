@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from .views import get_user_roles, assign_user_role, api_login_view
+from recruit_right.views import get_user_roles, assign_user_role, api_login_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Admin URL

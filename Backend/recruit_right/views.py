@@ -11,7 +11,7 @@ def api_login_view(request):
 
     email = data.get('email')
     password = data.get('password')
-    selected_role = data.get('selectedRole')
+    selected_role = data.get('selectedRole') #check1
     
     try:
         # Find the user by email (assuming email is used as username)
@@ -27,9 +27,10 @@ def api_login_view(request):
 
         # Check if the user is in the selected role group
         if user.groups.filter(name=selected_role).exists():  # This line is important!
+        # if user.exists(): 
             return JsonResponse({
                 'message': 'Login successful',
-                'role': selected_role,
+                 'role': selected_role,
                 'redirect_url': get_redirect_url_for_role(selected_role)
             })
         else:
