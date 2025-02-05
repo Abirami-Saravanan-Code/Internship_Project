@@ -79,13 +79,14 @@ WSGI_APPLICATION = 'candidate_screening.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Candidate_Screening',
-        'USER': 'postgres',
-        'PASSWORD': 'Abi@123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'recruit_right',  # Name of the new database
+        'USER': 'postgres',       # Your PostgreSQL username
+        'PASSWORD': 'Abi@123',    # Your PostgreSQL password
+        'HOST': 'localhost',      # Database host (localhost for local setup)
+        'PORT': '5432',           # Default PostgreSQL port
     }
 }
+
 
 
 # Password validation

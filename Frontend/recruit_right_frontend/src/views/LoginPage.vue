@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="illustration-container">
-      <img src="/assets/WelcomePageimage.jpg" alt="Illustration" class="illustration" />
+      <img src="require('@/assets/WelcomePageimage.jpg')" alt="Illustration" class="illustration" />
     </div>
     <div class="login-container">
       <h1>Welcome to Recruit Right!</h1>
@@ -22,11 +22,11 @@
           <label for="role">Select Your Role:</label>
           <select v-model="selectedRole" id="role" class="input-field" required>
             <option value="" disabled>Select role</option>
-            <option value="admin">Admin</option>
-            <option value="hiring-manager">Hiring Manager</option>
-            <option value="sourcing-team">Sourcing Team</option>
-            <option value="interviewer">Interviewer</option>
-            <option value="candidate">Candidate</option>
+            <option value="Admin">Admin</option>
+            <option value="Hiring Manager">Hiring Manager</option>
+            <option value="Sourcing Team">Sourcing Team</option>
+            <option value="Interviewer">Interviewer</option>
+            <option value="Candidate">Candidate</option>
           </select>
         </div>
 
@@ -62,40 +62,49 @@ export default {
   },
   methods: {
     async login() {
-  if (this.email && this.password) {
-    try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
-        email: this.email,
-        password: this.password,
-      });
+      if (this.email && this.password && this.selectedRole) {
+        try {
+          const response = await axios.post('http://localhost:8000/api/login/', {
+            email: this.email,
+            password: this.password,
+            role: this.selectedRole,  // Send the exact role value to backend
+          });
 
-      // If login is successful, check the user's role
-      const userRole = response.data.role;
+          if (response.data.token) {
+            // Assuming your backend returns a token if authentication is successful.
+            localStorage.setItem('auth_token', response.data.token);  // Store the token (if using JWT)
 
-      // Role-based redirection logic
-      if (userRole === 'admin') {
-        this.$router.push({ name: 'Admin' });
-      } else if (userRole === 'hiring-manager') {
-        this.$router.push({ name: 'HiringManager' });
-      } else if (userRole === 'sourcing-team') {
-        this.$router.push({ name: 'SourcingTeam' });
-      } else if (userRole === 'interviewer') {
-        this.$router.push({ name: 'Interviewer' });
-      } else if (userRole === 'candidate') {
-        this.$router.push({ name: 'Candidate' });
+            // Role-based redirection logic
+            const userRole = response.data.role;
+
+            if (userRole === 'Admin') {
+              this.$router.push({ name: 'Admin' });
+            } else if (userRole === 'Hiring Manager') {
+              this.$router.push({ name: 'HiringManager' });
+            } else if (userRole === 'Sourcing Team') {
+              this.$router.push({ name: 'SourcingTeam' });
+            } else if (userRole === 'Interviewer') {
+              this.$router.push({ name: 'Interviewer' });
+            } else if (userRole === 'Candidate') {
+              this.$router.push({ name: 'Candidate' });
+            } else {
+              alert('Invalid role');
+            }
+          } else {
+            this.loginError = "Invalid login credentials!";
+            alert(this.loginError);
+          }
+        } catch (error) {
+          this.loginError = "Error during login, please try again.";
+          alert(this.loginError);
+        }
       } else {
-        alert('Invalid role selected');
+        alert('Please fill in all fields.');
       }
-    } catch (error) {
-      this.loginError = "Invalid login credentials!";
-      alert(this.loginError);
-    }
-  } else {
-    alert('Please fill in all fields.');
-  }
-}
+    },
   },
 };
+
 </script>
   
   <style scoped>

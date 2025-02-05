@@ -1,32 +1,14 @@
-from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from django.http import JsonResponse
+from django.contrib.auth.models import User, Group
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 
-# Existing API views for user roles
-@api_view(['GET'])
-def get_user_roles(request):
-    users = User.objects.all()
-    data = [{'id': user.id, 'username': user.username, 'roles': [group.name for group in user.groups.all()]} for user in users]
-    return Response(data)
-
-@api_view(['POST'])
-def assign_user_role(request):
-    user_id = request.data.get('user_id')
-    role = request.data.get('role')
-    user = User.objects.get(id=user_id)
-    group = Group.objects.get(name=role)
-    user.groups.add(group)
-    return Response({'message': f'Role {role} assigned to user {user.username}'})
-
-# New API view for login with role-based redirection
 @csrf_exempt
 @api_view(['POST'])
 def api_login_view(request):
     data = request.data
-    
+
     email = data.get('email')
     password = data.get('password')
     selected_role = data.get('selectedRole')
@@ -44,7 +26,7 @@ def api_login_view(request):
         login(request, user)  # Log the user in
 
         # Check if the user is in the selected role group
-        if user.groups.filter(name=selected_role).exists():
+        if user.groups.filter(name=selected_role).exists():  # This line is important!
             return JsonResponse({
                 'message': 'Login successful',
                 'role': selected_role,
@@ -59,7 +41,7 @@ def get_redirect_url_for_role(role):
     """Returns the redirect URL based on the user's role"""
     if role == 'admin':
         return '/admin/dashboard/'
-    elif role == 'hiring-manager':
+    elif role == 'Hiring Manager':  # Updated to match the role with spaces and capitalization
         return '/hiring-manager/dashboard/'
     elif role == 'sourcing-team':
         return '/sourcing-team/dashboard/'
@@ -67,4 +49,37 @@ def get_redirect_url_for_role(role):
         return '/interviewer/dashboard/'
     elif role == 'candidate':
         return '/candidate/dashboard/'
-    return '/'
+    return '/'  # Default fallback if no match
+
+# Added function to fetch user roles
+@csrf_exempt
+@api_view(['GET'])
+def get_user_roles(request):
+    """Returns a list of available roles in the system"""
+    roles = ['admin', 'Hiring Manager', 'sourcing-team', 'interviewer', 'candidate']  # Example roles
+    return JsonResponse({'roles': roles})
+
+@csrf_exempt
+@api_view(['POST'])
+def assign_user_role(request):
+    """Assign a role to a user"""
+    data = request.data
+    email = data.get('email')
+    role = data.get('role')
+    
+    try:
+        user = User.objects.get(email=email)
+        group, created = Group.objects.get_or_create(name=role)  # Ensure matching role name
+        user.groups.add(group)
+        return JsonResponse({'message': f'Role {role} assigned to {email}'})
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+# Protecting views for "Hiring Manager"
+@csrf_exempt
+@api_view(['GET'])
+def hiring_manager_dashboard(request):
+    """Only accessible by users with 'Hiring Manager' role"""
+    if not request.user.groups.filter(name='Hiring Manager').exists():  # Updated group name
+        return JsonResponse({'error': 'You do not have access to this dashboard'}, status=403)
+    return JsonResponse({'message': 'Welcome to the Hiring Manager Dashboard'})
